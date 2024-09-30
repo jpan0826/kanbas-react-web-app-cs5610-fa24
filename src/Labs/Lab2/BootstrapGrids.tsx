@@ -1,4 +1,4 @@
-export default function BootstrapGrds() {
+export default function BootstrapGrids() {
     return(
         <div>
         <h2>Bootstrap</h2>
