@@ -1,3 +1,5 @@
+import { useParams } from "react-router";
+import * as db from "../../Database"
 import AssignmentsControls from "./AssignmentsControls";
 import AssignmentsControlButtons from "./AssignmentsControlButtons";
 import AssignmentControlButtons from "./AssignmentControlButtons";
@@ -5,11 +7,29 @@ import { BsGripVertical } from "react-icons/bs";
 import { FaRegPenToSquare } from "react-icons/fa6";
 
 export default function Assignments() {
+    const { cid } = useParams();
+    const assignments = db.assignments;
     return (
         <div>
             <AssignmentsControls /><br /><br /><br /><br />
 
             <ul id="wd-assignments-all" className="list-group rounded-0">
+                {assignments.filter((assignment: any) => assignment.course === cid).map((assignment: any) =>(
+                    <li className="wd-assignments-all list-group-item p-0 mb-5 fs-5 border-gray">
+                        <div className="wd-title p-3 ps-2 bg-secondary">
+                            <BsGripVertical className="me-2 fs-3" /> 
+                            Assignments
+                            <AssignmentsControlButtons />
+                        </div>
+                    </li>
+                ))}
+            </ul>
+
+
+
+
+
+            {/* <ul id="wd-assignments-all" className="list-group rounded-0">
                 <li className="wd-assignments-all list-group-item p-0 mb-5 fs-5 border-gray">
                     <div className="wd-title p-3 ps-2 bg-secondary">
                     <BsGripVertical className="me-2 fs-3" />
@@ -100,7 +120,7 @@ A3</a></strong></h5>
                     </ul>
                 </li>
             
-            </ul>
+            </ul> */}
 
 
             
