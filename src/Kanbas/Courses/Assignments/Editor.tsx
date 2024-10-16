@@ -138,7 +138,7 @@ export default function AssignmentEditor() {
                           <strong>Due</strong>
                         </label>
                         <div className="col">
-                          <input type="datetime-local" value="2024-05-13T23:59" className="form-control" id="due" />
+                          <input type="datetime-local" value={assignment.due_timestamp} className="form-control" id="due" />
                         </div><br />
 
                         <div className="row">
@@ -147,7 +147,7 @@ export default function AssignmentEditor() {
                               <strong>Available from</strong>
                             </label>
                             <div className="col-sm-5">
-                              <input type="datetime-local" value="2024-05-06T00:00" className="form-control" id="due" />
+                              <input type="datetime-local" value={assignment.available_timestamp}className="form-control" id="due" />
                             </div>
                           </div>
                           <div className="col-sm">
