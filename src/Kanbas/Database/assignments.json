@@ -1,5 +1,5 @@
 [
-    { "_id": "A101", "title": "Propulsion Assignment", "course": "RS101", "available_date": "2024-10-14T12:34:56Z", "due_date": "2024-10-08", "points": "100 pts"},
+    { "_id": "A101", "title": "Propulsion Assignment", "course": "RS101", "available_date": "2024-10-14T12:34:56Z", "due_date": "2024-10-08", "points": "100 pts", "description":"some description"},
     { "_id": "A102", "title": "Combustion Analysis", "course": "RS101", "available_date": "2024-10-01", "due_date": "2024-10-08", "points": "100 pts" },
     { "_id": "A103", "title": "Nozzle Design Project", "course": "RS101", "available_date": "2024-10-01", "due_date": "2024-10-08", "points": "100 pts"},
     { "_id": "A201", "title": "Aerodynamics Quiz", "course": "RS102" },

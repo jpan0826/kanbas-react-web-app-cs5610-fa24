@@ -1,39 +1,39 @@
+import { useParams } from "react-router";
+import * as db from "../../Database";
+import { Link } from "react-router-dom";
 export default function AssignmentEditor() {
-    return (
-        <div className="container mt-5">
+  const { cid } = useParams();
+  const { aid } = useParams();
+  const assignments = db.assignments;
+  return (
+    <div className="container mt-5">
       <div id="wd-assignments-editor">
-        <div id="wd-assignment-name" className="mb-3">
-    <label htmlFor="assignment-name" className="form-label">
-      Assignment Name</label>
-    <input type="text" className="form-control"
-      id="assignment-name" placeholder="A1" />
-  </div>
+        {assignments.filter((assignment: any) => assignment._id === aid)
+          .map((assignment: any) => (
+            <div>
+              <div id="wd-assignment-name" className="mb-3">
+                <label htmlFor="assignment-name" className="form-label">
+                  Assignment Name</label>
+                <input type="text" className="form-control"
+                  id="assignment-name" placeholder={aid} />
+              </div>
+              <div id="wd-assignment-instruction" className="mb-3 border rounded p-3">
+                <p>{assignment.description} </p>
+                
+              </div>
 
-  <div id="wd-assignment-instruction" className="mb-3 border rounded p-3">
-    <p>The assignment is <a href="#" className="text-danger">available online</a></p>
-    <p>Submit a link to the landing page of your Web application running on <span className="dotted">Netlify</span>.</p>
-    <p>The landing page should include the following:</p>
-    <ul>
-        <li>Your full name and section</li>
-        <li>Links to each of the lab assignments</li>
-        <li>Link to the <span className="dotted">Kanbas</span> application</li>
-        <li>Links to all relevant source code repositories</li>
-    </ul>
-    <p>The <span className="dotted">Kanbas</span> appliction should include a link to navigate back to the landing page.</p>
-  </div>
+              <div className="container">
 
-  <div className="container">
+                <div id="wd-assignment-points" className="row">
+                  <label htmlFor="points" className="form-label col text-end">
+                    Points
+                  </label>
+                  <div className="col">
+                    <input id="points" type="number" className="form-control" value={assignment.point} />
+                  </div>
+                </div> <br />
 
-    <div id="wd-assignment-points" className="row">
-      <label htmlFor="points" className="form-label col text-end">
-        Points
-      </label>
-      <div className="col">
-        <input id="points" type="number" className="form-control" value="100" />
-      </div>
-    </div> <br />
-
-    <div id="wd-assignment-assignment-group" className="row">
+                <div id="wd-assignment-assignment-group" className="row">
       <label htmlFor="assignment-group" className="form-label col text-end">
         Assignment Group
       </label>
@@ -117,81 +117,72 @@ export default function AssignmentEditor() {
       </div>
     </div><br />
 
-
-    <div id="wd-assignment-assign" className="row">
-      <label htmlFor="assign" className="form-label col text-end">
-        Assign
-      </label>
-      <div className="col">
-        <div className="card border boder-light rounded">
-          <div className="card-body">
-            <label htmlFor="assign-to" className="form-label">
-              <strong>Assign to</strong>
-            </label>
-            <div className="col">
-              <input type="text" className="form-control" id="assign-to" value="Everyone" />
-            </div><br />
-
-            <label htmlFor="due" className="form-label">
-              <strong>Due</strong>
-            </label>
-            <div className="col">
-              <input type="datetime-local" value="2024-05-13T23:59" className="form-control" id="due"/>
-            </div><br />
-
-            <div className="row">
-              <div className="col-sm">
-              <label htmlFor="available-from" className="form-label">
-                <strong>Available from</strong>
-              </label>
-              <div className="col-sm-5">
-                <input type="datetime-local" value="2024-05-06T00:00" className="form-control" id="due"/>
-              </div>
-              </div>
-              <div className="col-sm">
-              <label htmlFor="available-until" className="form-label">
-                <strong>Until</strong>
-              </label>
-              <div className="col-sm-5">
-                <input type="datetime-local" value="" className="form-control" id="due"/>
-              </div>
-              </div>
-            </div>
-
-
-          
-
-
-
-
-          </div>
-       
-        </div>
- 
-   
-      </div>
-    </div>
-
-
-  </div>
-
-
-
-    </div> <br/>
-
-
-    <div className="d-flex justify-content-end">
-            <button type="button" className="btn btn-secondary me-2">Cancel</button>
-            <button type="submit" className="btn btn-danger">Save</button>
-          </div>
-
-        
-
-
-
-
-    </div>
-
-
     
-);}
+
+
+                <div id="wd-assignment-assign" className="row">
+                  <label htmlFor="assign" className="form-label col text-end">
+                    Assign
+                  </label>
+                  <div className="col">
+                    <div className="card border boder-light rounded">
+                      <div className="card-body">
+                        <label htmlFor="assign-to" className="form-label">
+                          <strong>Assign to</strong>
+                        </label>
+                        <div className="col">
+                          <input type="text" className="form-control" id="assign-to" value="Everyone" />
+                        </div><br />
+
+                        <label htmlFor="due" className="form-label">
+                          <strong>Due</strong>
+                        </label>
+                        <div className="col">
+                          <input type="datetime-local" value="2024-05-13T23:59" className="form-control" id="due" />
+                        </div><br />
+
+                        <div className="row">
+                          <div className="col-sm">
+                            <label htmlFor="available-from" className="form-label">
+                              <strong>Available from</strong>
+                            </label>
+                            <div className="col-sm-5">
+                              <input type="datetime-local" value="2024-05-06T00:00" className="form-control" id="due" />
+                            </div>
+                          </div>
+                          <div className="col-sm">
+                            <label htmlFor="available-until" className="form-label">
+                              <strong>Until</strong>
+                            </label>
+                            <div className="col-sm-5">
+                              <input type="datetime-local" value="" className="form-control" id="due" />
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div><br /><br />
+              <div className="d-flex justify-content-end">
+                <Link to={`/Kanbas/Courses/${cid}/Assignments`}><button type="button" className="btn btn-secondary me-2">Cancel</button></Link>
+                <Link to={`/Kanbas/Courses/${cid}/Assignments`}><button type="submit" className="btn btn-danger">Save</button></Link>
+              </div>
+
+            </div>
+          ))
+        }
+
+
+
+      </div> <br />
+
+
+    </div>
+
+
+
+  );
+}

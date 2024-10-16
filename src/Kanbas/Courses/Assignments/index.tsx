@@ -17,7 +17,7 @@ export default function Assignments() {
                 <li className="wd-assignments-all list-group-item p-0 mb-5 fs-5 border-gray">
                     <div className="wd-title p-3 ps-2 bg-secondary">
                         <BsGripVertical className="me-2 fs-3" />
-                        <select>
+                        <select className="select-button bg-secondary">
                             <option></option>
                         </select>
                         Assignments
@@ -38,6 +38,7 @@ export default function Assignments() {
                                                 {assignment.title}</Link></strong></h5>
                                             <div className="row">
                                                 <div className="col-md-auto"><h6><span className="text-danger">Multiple Modules </span>| </h6></div>
+                                                
                                                 <div className="col-md-auto"><h6><strong>Not available until</strong> {assignment.available_date} |</h6></div>
                                                 <div className="col-md-auto"><h6><strong>Due</strong> {assignment.due_date} |</h6></div>
                                                 <div className="col-md-auto"><h6>{assignment.points}</h6></div>
