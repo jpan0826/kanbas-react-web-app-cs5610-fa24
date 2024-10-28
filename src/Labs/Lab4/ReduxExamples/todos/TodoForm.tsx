@@ -8,9 +8,9 @@ export default function TodoForm() {
 
     return (
         <li className="list-group-item">
-            <button onClick={() =>  dispatch(addTodo(todo))}
+            <button className='btn btn-success float-end me-2' onClick={() =>  dispatch(addTodo(todo))}
                 id="wd-add-todo-click"> Add </button>
-            <button onClick={() =>  dispatch(addTodo(todo))}
+            <button className='btn btn-warning float-end me-2' onClick={() =>  dispatch(addTodo(todo))}
 
                 id="wd-update-todo-click"> Update </button>
             <input defaultValue={todo.title}
