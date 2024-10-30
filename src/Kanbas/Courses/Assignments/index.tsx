@@ -3,13 +3,17 @@ import * as db from "../../Database"
 import AssignmentsControls from "./AssignmentsControls";
 import AssignmentsControlButtons from "./AssignmentsControlButtons";
 import AssignmentControlButtons from "./AssignmentControlButtons";
-import { BsGripVertical } from "react-icons/bs";
-import { FaRegPenToSquare } from "react-icons/fa6";
-import { Link } from "react-router-dom";
 
+import { BsGripVertical } from "react-icons/bs";
+import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { addAssignment, editAssignment, deleteAssignment } from "./reducer";
+import { FaRegPenToSquare } from "react-icons/fa6";
 export default function Assignments() {
     const { cid } = useParams();
-    const assignments = db.assignments;
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const dispatch = useDispatch();
+    
     return (
         <div>
             <AssignmentsControls /><br /><br /><br /><br />
@@ -46,7 +50,11 @@ export default function Assignments() {
                                         </div></div>
 
                                         <div className="p-2 ms-auto fixed-width">
-                                            <AssignmentControlButtons /></div>
+                                            <AssignmentControlButtons
+                                            assignmentId={assignment._id}
+                                            deleteAssignment={(AssignmentId) => {
+                                                dispatch(deleteAssignment(AssignmentId));
+                                              }} /></div>
 
                                     </div>
                                 </li>
