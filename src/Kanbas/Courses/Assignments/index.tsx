@@ -7,13 +7,18 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { addAssignment, editAssignment, deleteAssignment } from "./reducer";
+import { deleteAssignment } from "./reducer";
 import { FaRegPenToSquare } from "react-icons/fa6";
 export default function Assignments() {
     const { cid } = useParams();
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const dispatch = useDispatch();
-    
+    const confirmAndDelete = (assignmentId : String) => {
+        const text = `Do you want to delete assignment ${assignmentId}?\nEither OK or Cancel.`;
+        if (window.confirm(text) == true) {
+            dispatch(deleteAssignment(assignmentId));
+        }
+    }
     return (
         <div>
             <AssignmentsControls /><br /><br /><br /><br />
@@ -48,13 +53,10 @@ export default function Assignments() {
                                                 <div className="col-md-auto"><h6>{assignment.points}</h6></div>
                                             </div>
                                         </div></div>
-
                                         <div className="p-2 ms-auto fixed-width">
                                             <AssignmentControlButtons
                                             assignmentId={assignment._id}
-                                            deleteAssignment={(AssignmentId) => {
-                                                dispatch(deleteAssignment(AssignmentId));
-                                              }} /></div>
+                                            deleteAssignment={(assignmentId) => confirmAndDelete(assignmentId) } /></div>
 
                                     </div>
                                 </li>
