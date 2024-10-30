@@ -28,7 +28,6 @@ export default function AssignmentEditor() {
     } else {
       dispatch(editAssignment(assignment));
     }
-    navigate("/Kanbas/Courses/RS101/Assignments/");
   };
   return (
     <div className="container mt-5">
