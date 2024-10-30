@@ -30,7 +30,7 @@ export default function Assignments() {
                     <ul className="wd-assignments list-group rounded-0">
                         {assignments.filter((assignment: any) => assignment.course === cid)
                             .map((assignment: any) => (
-                                <li className="wd-assignment list-group-item p03 ps-1">
+                                <li key={assignment._id} className="wd-assignment list-group-item p03 ps-1">
                                     <div className="d-flex flex-row">
                                         <div className="p-2">
                                             <BsGripVertical className="me-2 fs-3" /></div>
