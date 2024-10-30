@@ -7,13 +7,18 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { addAssignment, editAssignment, deleteAssignment } from "./reducer";
+import { deleteAssignment } from "./reducer";
 import { FaRegPenToSquare } from "react-icons/fa6";
 export default function Assignments() {
     const { cid } = useParams();
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const dispatch = useDispatch();
-    
+    const confirmAndDelete = (assignmentId : String) => {
+        const text = `Do you want to delete assignment ${assignmentId}?\nEither OK or Cancel.`;
+        if (window.confirm(text) == true) {
+            dispatch(deleteAssignment(assignmentId));
+        }
+    }
     return (
         <div>
             <AssignmentsControls /><br /><br /><br /><br />
@@ -30,7 +35,7 @@ export default function Assignments() {
                     <ul className="wd-assignments list-group rounded-0">
                         {assignments.filter((assignment: any) => assignment.course === cid)
                             .map((assignment: any) => (
-                                <li className="wd-assignment list-group-item p03 ps-1">
+                                <li key={assignment._id} className="wd-assignment list-group-item p03 ps-1">
                                     <div className="d-flex flex-row">
                                         <div className="p-2">
                                             <BsGripVertical className="me-2 fs-3" /></div>
@@ -50,11 +55,9 @@ export default function Assignments() {
                                         </div></div>
 
                                         <div className="p-2 ms-auto fixed-width">
-                                            <AssignmentControlButtons
+                                        <AssignmentControlButtons
                                             assignmentId={assignment._id}
-                                            deleteAssignment={(AssignmentId) => {
-                                                dispatch(deleteAssignment(AssignmentId));
-                                              }} /></div>
+                                            deleteAssignment={(assignmentId) => confirmAndDelete(assignmentId) } /></div>
 
                                     </div>
                                 </li>
