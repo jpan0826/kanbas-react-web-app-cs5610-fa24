@@ -83,16 +83,20 @@ export default function Dashboard(
 
                     </div>
                   </Link>
-                  {currentUser.role === 'STUDENT' && (<div>
-                    <button onClick={() => dispatch(enroll(course._id))}
-                      className="btn btn-success float float-end me-2">
-                      Enroll</button>
-                    <button onClick={() => dispatch(unenroll(course._id))}
-                      className="btn btn-danger float float-end me-2">
-                      Unenroll
-                    </button>
 
+
+                  {currentUser.role === 'STUDENT' && (<div>
+                    {!enrollments.includes(course._id) && (<button onClick={() => dispatch(enroll(course._id))}
+                      className="btn btn-success float-end me-2">
+                      Enroll</button>)}
+                    {enrollments.includes(course._id) && (<button onClick={() => dispatch(unenroll(course._id))}
+                      className="btn btn-danger float-end me-2">
+                      Unenroll
+                    </button>)}
                   </div>)}
+
+
+
                 </div>
               </div>
             ))}
