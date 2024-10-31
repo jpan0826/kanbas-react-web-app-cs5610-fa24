@@ -11,7 +11,11 @@ const accountSlice = createSlice({
   reducers: {
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
-      state.enrollments = db.enrollments.filter((enrollment)=>enrollment.user === action.payload._id).map((enrollment)=> enrollment.course)
+      if (action.payload === null) {
+        state.enrollments = []
+      }
+      else {
+      state.enrollments = db.enrollments.filter((enrollment)=>enrollment.user === action.payload._id).map((enrollment)=> enrollment.course)}
     },
     enroll: (state, action) => {
       state.enrollments = [...state.enrollments, action.payload]
@@ -21,5 +25,5 @@ const accountSlice = createSlice({
     }
   },
 });
-export const { setCurrentUser } = accountSlice.actions;
+export const { setCurrentUser, enroll, unenroll } = accountSlice.actions;
 export default accountSlice.reducer;
