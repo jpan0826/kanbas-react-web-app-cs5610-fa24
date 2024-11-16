@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import * as db from "../Database";
+// import * as db from "../Database";
 import { useDispatch, useSelector } from "react-redux";
 import { current } from "@reduxjs/toolkit";
 import { enroll, unenroll } from "../Account/reducer";
@@ -48,8 +48,7 @@ export default function Dashboard(
       <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
       <div id="wd-dashboard-courses" className="row">
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {courses.filter((course) =>
-            showAll || enrollments.includes(course._id))
+          {courses
             .map((course) => (
               <div className="wd-dashboard-course col" style={{ width: "300px" }}>
                 <div className="card rounded-3 overflow-hidden">
