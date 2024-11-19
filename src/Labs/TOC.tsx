@@ -17,8 +17,13 @@ export default function TOC() {
                 className={`nav-link ${pathname.includes("Lab5") ? "active" : ""}`}>Lab 5</a></li>
 
             <li className="nav-item"><a id="wd-k" href="#/Kanbas" className="nav-link">Kanbas</a></li>
-            <li className="nav-item"><a id="wd-github" href="https://github.com/jpan0826/kanbas-react-web-app-cs5610-fa24" target="_blank"
-                className="nav-link">My GitHub</a></li>
+            <li className="nav-item"><a id="wd-github-react" href="https://github.com/jpan0826/kanbas-react-web-app-cs5610-fa24" target="_blank"
+                className="nav-link">My GitHub react</a></li>
+            <li className="nav-item"><a id="wd-github-node" href="https://github.com/jpan0826/kanbas-node-server-app" target="_blank"
+                className="nav-link">My Github node</a></li>
+            <li className="nav-item"><a id="wd-server" href="https://kanbas-node-server-app-jupan-0e9919421847.herokuapp.com" target="_blank"
+                className="nav-link">Server</a></li>
+
         </ul>
     );
 }
