@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { current } from "@reduxjs/toolkit";
 import { enroll, unenroll } from "../Account/reducer";
+import * as usersClient from "../Account/client";
 export default function Dashboard(
   { courses, course, setCourse, addNewCourse,
     deleteCourse, updateCourse }: {
@@ -16,6 +17,17 @@ export default function Dashboard(
   // const { enrollments } = db;
   const [showAll, setShowAll] = useState(false)
   const { enrollments } = useSelector((state: any) => state.accountReducer);
+  
+  const enrollInCourse = async (courseId: string) => {
+    usersClient.enroll(courseId);
+    dispatch(enroll(courseId));
+  }
+
+  const unenrollFromCourse = async (courseId: string) => {
+    usersClient.unenroll(courseId);
+    dispatch(unenroll(course._id));
+  }
+
   const dispatch = useDispatch();
   return (
     <div id="wd-dashboard">
@@ -85,10 +97,10 @@ export default function Dashboard(
 
 
                   {currentUser.role === 'STUDENT' && (<div>
-                    {!enrollments.includes(course._id) && (<button onClick={() => dispatch(enroll(course._id))}
+                    {!enrollments.includes(course._id) && (<button onClick={() => enrollInCourse(course._id)}
                       className="btn btn-success float-end me-2">
                       Enroll</button>)}
-                    {enrollments.includes(course._id) && (<button onClick={() => dispatch(unenroll(course._id))}
+                    {enrollments.includes(course._id) && (<button onClick={() => unenrollFromCourse(course._id)}
                       className="btn btn-danger float-end me-2">
                       Unenroll
                     </button>)}

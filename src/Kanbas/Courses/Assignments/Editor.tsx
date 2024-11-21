@@ -30,7 +30,7 @@ export default function AssignmentEditor() {
     
     if (addNewAssignment) {
       const newAssignment = await coursesClient.createAssignmentForCourse(cid, assignment)
-      dispatch(addAssignment(newAssignment))
+      dispatch(addAssignment(newAssignment));
     } else {
       const newAssignment = await assignmentsClient.updateAssignment(assignment);
       dispatch(editAssignment(newAssignment));
