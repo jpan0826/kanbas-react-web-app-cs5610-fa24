@@ -7,15 +7,29 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from "./reducer";
+import { setAssignments, deleteAssignment } from "./reducer";
 import { FaRegPenToSquare } from "react-icons/fa6";
+
+import { useEffect } from "react";
+import * as coursesClient from "../client";
+import * as assignmentsClient from "./client";
+
 export default function Assignments() {
     const { cid } = useParams();
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
     const dispatch = useDispatch();
-    const confirmAndDelete = (assignmentId : String) => {
+    const fetchAssignments = async () => {
+        const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+        dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+        fetchAssignments();
+    }, []);
+
+    const confirmAndDelete = async (assignmentId : string) => {
         const text = `Do you want to delete assignment ${assignmentId}?\nEither OK or Cancel.`;
         if (window.confirm(text) == true) {
+            await assignmentsClient.deleteAssignment(assignmentId);
             dispatch(deleteAssignment(assignmentId));
         }
     }
@@ -33,7 +47,7 @@ export default function Assignments() {
                         <AssignmentsControlButtons />
                     </div>
                     <ul className="wd-assignments list-group rounded-0">
-                        {assignments.filter((assignment: any) => assignment.course === cid)
+                        {assignments
                             .map((assignment: any) => (
                                 <li key={assignment._id} className="wd-assignment list-group-item p03 ps-1">
                                     <div className="d-flex flex-row">

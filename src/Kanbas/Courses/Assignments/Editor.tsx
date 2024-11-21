@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { addAssignment, editAssignment } from "./reducer";
 import { useNavigate } from "react-router";
 import { useState } from 'react';
+import * as coursesClient from '../client';
+import * as assignmentsClient from './client';
 export default function AssignmentEditor() {
   const { cid , aid } = useParams();
   const addNewAssignment = aid === undefined //assignment id undefined means create new assignment
@@ -23,13 +25,18 @@ export default function AssignmentEditor() {
   };
   // name, description, points, due date, available from date, and available until date.
   const [assignment, setAssignment] = useState(defaultAssignment)
-  const save = (assignment: any) => {
+  const save = async (assignment: any) => {
+    if (!cid) return;
+    
     if (addNewAssignment) {
-      dispatch(addAssignment(assignment))
+      const newAssignment = await coursesClient.createAssignmentForCourse(cid, assignment)
+      dispatch(addAssignment(newAssignment))
     } else {
-      dispatch(editAssignment(assignment));
+      const newAssignment = await assignmentsClient.updateAssignment(assignment);
+      dispatch(editAssignment(newAssignment));
     }
   };
+
 
   return (
     <div className="container mt-5">

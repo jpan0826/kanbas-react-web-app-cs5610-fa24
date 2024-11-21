@@ -21,7 +21,7 @@ export default function TOC() {
                 className="nav-link">My GitHub react</a></li>
             <li className="nav-item"><a id="wd-github-node" href="https://github.com/jpan0826/kanbas-node-server-app" target="_blank"
                 className="nav-link">My Github node</a></li>
-            <li className="nav-item"><a id="wd-server" href="https://kanbas-node-server-app-jupan-0e9919421847.herokuapp.com" target="_blank"
+            <li className="nav-item"><a id="wd-server" href="https://kanbas-node-server-app-3e4p.onrender.com" target="_blank"
                 className="nav-link">Server</a></li>
 
         </ul>
