@@ -1,31 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 // import * as db from "../Database";
 import { useDispatch, useSelector } from "react-redux";
-import { current } from "@reduxjs/toolkit";
-import { enroll, unenroll } from "../Account/reducer";
 import * as usersClient from "../Account/client";
 export default function Dashboard(
-  { courses, course, setCourse, addNewCourse,
-    deleteCourse, updateCourse }: {
-      courses: any[]; course: any; setCourse: (course: any) => void;
-      addNewCourse: () => void; deleteCourse: (course: any) => void;
+  { courses, course, setCourse, setCourses, addNewCourse,
+    deleteCourse, updateCourse, allCourses }:
+    {
+      courses: any[];
+      course: any;
+      setCourse: (course: any) => void;
+      setCourses: (courses: any[]) => void;
+      addNewCourse: () => void; 
+      deleteCourse: (course: any) => void;
       updateCourse: () => void;
+      allCourses: any[];
     }
 ) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  // const { enrollments } = db;
   const [showAll, setShowAll] = useState(false)
-  const { enrollments } = useSelector((state: any) => state.accountReducer);
+  const [coursesToDisplay, setCoursesToDisplay] = useState(courses)
+
+  useEffect(() => {
+    if (showAll) {
+      setCoursesToDisplay(allCourses)
+    } else {
+      setCoursesToDisplay(courses)
+    }
+  }, [currentUser, showAll, courses, allCourses]);
   
   const enrollInCourse = async (courseId: string) => {
-    usersClient.enroll(courseId);
-    dispatch(enroll(courseId));
+    let newCourses = []
+    newCourses = await usersClient.enroll(courseId);
+    setCourses(newCourses);
   }
 
   const unenrollFromCourse = async (courseId: string) => {
-    usersClient.unenroll(courseId);
-    dispatch(unenroll(course._id));
+    let newCourses = []
+    newCourses = await usersClient.unenroll(courseId);
+    setCourses(newCourses);
   }
 
   const dispatch = useDispatch();
@@ -34,7 +47,9 @@ export default function Dashboard(
       <h1 id="wd-dashboard-title">Dashboard</h1> <hr />
       {currentUser.role === 'STUDENT' && (<div>
         <button className="btn btn-primary float-end" id="wd-enrollments-click"
-          onClick={() => setShowAll(!showAll)}>
+          onClick={() => {
+            setShowAll(!showAll)
+          }}>
           Enrollments
         </button>
       </div>)}
@@ -57,10 +72,11 @@ export default function Dashboard(
       </div>)}
 
 
-      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
+      <h2 id="wd-dashboard-published">Published Courses ({coursesToDisplay.length})</h2> <hr />
       <div id="wd-dashboard-courses" className="row">
-        <div className="row row-cols-1 row-cols-md-5 g-4">
-          {courses
+
+      <div  className="row row-cols-1 row-cols-md-5 g-4">
+        {coursesToDisplay
             .map((course) => (
               <div className="wd-dashboard-course col" style={{ width: "300px" }}>
                 <div className="card rounded-3 overflow-hidden">
@@ -95,23 +111,20 @@ export default function Dashboard(
                     </div>
                   </Link>
 
-
                   {currentUser.role === 'STUDENT' && (<div>
-                    {!enrollments.includes(course._id) && (<button onClick={() => enrollInCourse(course._id)}
+                    {!courses.find(enrolledCourse => enrolledCourse._id === course._id) && (<button onClick={() => enrollInCourse(course._id)}
                       className="btn btn-success float-end me-2">
                       Enroll</button>)}
-                    {enrollments.includes(course._id) && (<button onClick={() => unenrollFromCourse(course._id)}
+                    {courses.find(enrolledCourse => enrolledCourse._id == course._id) && (<button onClick={() => unenrollFromCourse(course._id)}
                       className="btn btn-danger float-end me-2">
                       Unenroll
                     </button>)}
                   </div>)}
-
-
-
                 </div>
               </div>
             ))}
         </div>
+
       </div>
     </div>
   );

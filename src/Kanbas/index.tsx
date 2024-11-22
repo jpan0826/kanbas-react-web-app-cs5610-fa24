@@ -12,10 +12,13 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "./Account/ProtectedRoute";
 import Session from "./Account/Session";
 import * as courseClient from "./Courses/client";
+import { all } from "axios";
 
 
 export default function Kanbas() {
   const [courses, setCourses] = useState<any[]>([]);
+  const [allCourses, setAllCourses] = useState<any[]>([]);
+
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const fetchCourses = async () => {
     let courses = [];
@@ -27,7 +30,9 @@ export default function Kanbas() {
       console.error(error);
     }
     setCourses(courses);
+    setAllCourses(allCourses)
   };
+
   useEffect(() => {
     fetchCourses();
   }, [currentUser]);
@@ -70,9 +75,12 @@ export default function Kanbas() {
                   courses={courses}
                   course={course}
                   setCourse={setCourse}
+                  setCourses={setCourses}
                   addNewCourse={addNewCourse}
                   deleteCourse={deleteCourse}
-                  updateCourse={updateCourse} /></ProtectedRoute>
+                  updateCourse={updateCourse} 
+                  allCourses={allCourses}
+                  /></ProtectedRoute>
 
               } />
               <Route path="Courses/:cid/*" element={<ProtectedRoute><Courses courses={courses} /></ProtectedRoute>} />
