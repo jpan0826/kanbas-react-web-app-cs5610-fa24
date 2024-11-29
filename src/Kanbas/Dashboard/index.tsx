@@ -14,15 +14,12 @@ export default function Dashboard(
       addNewCourse: () => void;
       deleteCourse: (course: any) => void;
       updateCourse: () => void;
-      // allCourses: any[];
       enrolling: boolean;
       setEnrolling: (enrolling: boolean) => void;
       updateEnrollment: (courseId: string, enrolled: boolean) => void;
     }
 ) {
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const [showAll, setShowAll] = useState(false)
-  const [coursesToDisplay, setCoursesToDisplay] = useState(courses)
 
   // useEffect(() => {
   //   if (showAll) {
@@ -79,11 +76,11 @@ export default function Dashboard(
       </div>)}
 
 
-      <h2 id="wd-dashboard-published">Published Courses ({coursesToDisplay.length})</h2> <hr />
+      <h2 id="wd-dashboard-published">Published Courses ({courses.length})</h2> <hr />
       <div id="wd-dashboard-courses" className="row">
 
         <div className="row row-cols-1 row-cols-md-5 g-4">
-          {coursesToDisplay
+          {courses
             .map((course) => (
               <div className="wd-dashboard-course col" style={{ width: "300px" }}>
                 <div className="card rounded-3 overflow-hidden">
@@ -92,6 +89,12 @@ export default function Dashboard(
                     <img src="/images/tiffanyblue.jpg" width="100%" height={160} />
                     <div className="card-body">
                       <h5 className="wd-dashboard-course-title card-title">
+
+
+                        {course.name} </h5>
+                      <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
+                        {course.description} </p>
+                      <button className="btn btn-primary"> Go </button>
                         {enrolling && (
                           <button onClick={(event) => {
                             event.preventDefault();
@@ -102,13 +105,6 @@ export default function Dashboard(
                             {course.enrolled ? "Unenroll" : "Enroll"}
                           </button>
                         )}
-
-                        {course.name} </h5>
-                      <p className="wd-dashboard-course-title card-text overflow-y-hidden" style={{ maxHeight: 100 }}>
-                        {course.description} </p>
-                      <button className="btn btn-primary"> Go </button>
-
-
                       {currentUser.role === 'FACULTY' && (
                         <button onClick={(event) => {
                           event.preventDefault();
@@ -128,7 +124,7 @@ export default function Dashboard(
 
                     </div>
                   </Link>
-
+{/* 
                   {currentUser.role === 'STUDENT' && (<div>
                     {!courses.find(enrolledCourse => enrolledCourse._id === course._id) && (<button onClick={() => enrollInCourse(course._id)}
                       className="btn btn-success float-end me-2">
@@ -137,7 +133,7 @@ export default function Dashboard(
                       className="btn btn-danger float-end me-2">
                       Unenroll
                     </button>)}
-                  </div>)}
+                  </div>)} */}
                 </div>
               </div>
             ))}
