@@ -24,7 +24,7 @@ export default function Assignments() {
     };
     useEffect(() => {
         fetchAssignments();
-    }, []);
+    }, [cid]);
 
     const confirmAndDelete = async (assignmentId : string) => {
         const text = `Do you want to delete assignment ${assignmentId}?\nEither OK or Cancel.`;
