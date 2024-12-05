@@ -26,7 +26,7 @@ export default function Assignments() {
         fetchAssignments();
     }, [cid]);
 
-    const confirmAndDelete = async (assignmentId : string) => {
+    const confirmAndDelete = async (assignmentId: string) => {
         const text = `Do you want to delete assignment ${assignmentId}?\nEither OK or Cancel.`;
         if (window.confirm(text) == true) {
             await assignmentsClient.deleteAssignment(assignmentId);
@@ -61,7 +61,7 @@ export default function Assignments() {
                                                 {assignment.title}</Link></strong></h5>
                                             <div className="row">
                                                 <div className="col-md-auto"><h6><span className="text-danger">Multiple Modules </span>| </h6></div>
-                                                
+
                                                 <div className="col-md-auto"><h6><strong>Not available until</strong> {assignment.available_date} |</h6></div>
                                                 <div className="col-md-auto"><h6><strong>Due</strong> {assignment.due_date} |</h6></div>
                                                 <div className="col-md-auto"><h6>{assignment.points}</h6></div>
@@ -69,9 +69,9 @@ export default function Assignments() {
                                         </div></div>
 
                                         <div className="p-2 ms-auto fixed-width">
-                                        <AssignmentControlButtons
-                                            assignmentId={assignment._id}
-                                            deleteAssignment={(assignmentId) => confirmAndDelete(assignmentId) } /></div>
+                                            <AssignmentControlButtons
+                                                assignmentId={assignment._id}
+                                                deleteAssignment={(assignmentId) => confirmAndDelete(assignmentId)} /></div>
 
                                     </div>
                                 </li>
