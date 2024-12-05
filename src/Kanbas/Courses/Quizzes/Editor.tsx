@@ -3,7 +3,7 @@ import EditorNavigation from "./EditorNavigation";
 import DetailsEditor from "./DetailsEditor";
 import QuestionsEditor from "./QuestionsEditor";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from 'react';
 import * as coursesClient from '../client';
 import * as quizzesClient from "./client";
@@ -14,6 +14,8 @@ export default function Editor() {
     const addNewQuiz = qid === 'new';
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { quizzes } = useSelector((state: any) => state.quizzesReducer);
+
     const defaultQuizDetails = {
         "title": "",
         "description": "",
@@ -37,9 +39,17 @@ export default function Editor() {
     }
     // local state
     const [quiz, setQuiz] = useState(defaultQuizDetails);
+    
 
     const fetchQuiz = async () => {
-        setQuiz(defaultQuizDetails);
+        
+        if (addNewQuiz) {
+            setQuiz(defaultQuizDetails);
+        }
+        else {
+            setQuiz(quizzes.find((quiz:any) => (quiz._id === qid)));
+        }
+        
     }
     useEffect(() => {
         fetchQuiz();
@@ -55,8 +65,9 @@ export default function Editor() {
             detailsPath = `/Kanbas/Courses/${cid}/Quizzes/${newQuiz._id}/Details`
         } else {
             const newQuiz = await quizzesClient.updateQuiz(quiz);
+            console.log(newQuiz._id === undefined)
             dispatch(editQuiz(newQuiz));
-            detailsPath = `/Kanbas/Courses/${cid}/Quizzes/${newQuiz._id}/Details`
+            detailsPath = `/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Details`
         }
         navigate(detailsPath);
     };
