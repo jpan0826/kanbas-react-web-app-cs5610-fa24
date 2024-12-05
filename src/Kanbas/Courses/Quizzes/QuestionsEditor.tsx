@@ -14,10 +14,10 @@ import MultipleChoiceEditor from "./MultipleChoiceEditor";
 import QuestionEditor from "./QuestionEditor";
 
 
-export default function QuestionsEditor({ quiz, saveQuiz }:
+export default function QuestionsEditor({ quiz, setQuiz }:
     {
         quiz: any,
-        saveQuiz: (quiz: any) => void
+        setQuiz: (quiz: any) => void
     }) {
     const { cid, qid } = useParams();
     //find questions from Redux given the quiz id
@@ -32,7 +32,7 @@ export default function QuestionsEditor({ quiz, saveQuiz }:
         "points": 10,
         "group": "",
         "shuffle": true,
-        "time": "20min",
+        "time": 20,
         "multiple_attempts": false,
         "show_correct_answers": "",
         "access_code": "",
@@ -43,8 +43,10 @@ export default function QuestionsEditor({ quiz, saveQuiz }:
     }
 
     const saveQuizWithQuestions = async (questions: any[]) => {
-        quiz.questions = questions;
-        saveQuiz(quiz)
+        setQuiz({
+            ...quiz,
+            questions: questions
+        })
     }
 
     const editQuestion = async (question: any) => {
@@ -57,7 +59,8 @@ export default function QuestionsEditor({ quiz, saveQuiz }:
 
     const addNewQuestion = (question: any) => {
         defaultQuestion._id = Date.now()
-        setQuestions([...questions, defaultQuestion])
+        const questiosnToAdd = [...questions, defaultQuestion]
+        setQuestions(questiosnToAdd)
     }
 
     return (
@@ -81,7 +84,7 @@ export default function QuestionsEditor({ quiz, saveQuiz }:
                         <button id="wd-add-assignment-btn" className="btn btn-lg btn-secondary me-1 float-end" onClick={addNewQuestion}>
                             <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                             Add Question</button>
-                        <Link to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Questions`}><button type="submit" className="btn btn-lg btn-danger" onClick={() => saveQuizWithQuestions(questions)}>Save</button></Link>
+                        <Link to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/DetailsEdit`}><button type="submit" className="btn btn-lg btn-danger" onClick={() => saveQuizWithQuestions(questions)}>Save</button></Link>
                     </div>
                 </div>
 

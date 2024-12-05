@@ -7,60 +7,18 @@ import * as quizzesClient from "./client";
 import { addQuiz, editQuiz } from "./reducer";
 
 
-export default function DetailsEditor() {
+export default function DetailsEditor({ quiz, setQuiz, saveQuiz }:
+    {
+        quiz: any,
+        setQuiz: (quiz: any) => void,
+        saveQuiz: (quiz: any) => void
+    }) {
     const { cid, qid } = useParams();
-    const addNewQuiz = qid === 'new';
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const defaultQuizDetails = {
-        "title": "",
-        "description": "",
-        "assignee": "",
-        "type": "Graded Quiz",
-        "points": "",
-        "group": "",
-        "shuffle": true,
-        "time_limit_boolean": false,
-        "time_limit": "20min",
-        "multiple_attempts": false,
-        "show_correct_answers": "",
-        "access_code": "",
-        "one_question": "yes",
-        "webcam": "no",
-        "lock": "no",
-        "due_date": "",
-        "available_date": "",
-        "until_date": ""
-    }
-    // local state
-    const [quiz, setQuiz] = useState(defaultQuizDetails);
-
-    const fetchQuiz = async () => {
-        setQuiz(defaultQuizDetails);
-    }
-    useEffect(() => {
-        fetchQuiz();
-    }, [cid, qid]);
-
-    const save = async (quiz: any) => {
-        let detailsPath = '';
-        if (!cid) return;
-
-        if (addNewQuiz) {
-            const newQuiz = await coursesClient.createQuizForCourse(cid, quiz)
-            dispatch(addQuiz(newQuiz));
-            detailsPath = `/Kanbas/Courses/${cid}/Quizzes/${newQuiz._id}/Details`
-        } else {
-            const newQuiz = await quizzesClient.updateQuiz(quiz);
-            dispatch(editQuiz(newQuiz));
-            detailsPath = `/Kanbas/Courses/${cid}/Quizzes/${newQuiz._id}/Details`
-        }
-        navigate(detailsPath);
-    };
 
 
     return (
         <div>
+            {JSON.stringify(quiz)}
             <div className="container mt-5">
 
                 <div id="wd-quiz-details-editor">
@@ -184,7 +142,7 @@ export default function DetailsEditor() {
             <div className="container float-start">
                 <div className="d-flex justify-content-center">
                     {/* save to Quiz Detail screen  */}
-<button type="submit" className="btn btn-primary" onClick={() => save(quiz)}>Save</button>
+<button type="submit" className="btn btn-primary" onClick={() => saveQuiz(quiz)}>Save</button>
                     {/* cancel to Quiz list */}
                     <Link to={`/Kanbas/Courses/${cid}/Quizzes`}><button type="button" className="btn btn-secondary" >Cancel</button></Link>
 
