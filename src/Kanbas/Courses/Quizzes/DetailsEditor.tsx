@@ -18,7 +18,7 @@ export default function DetailsEditor({ quiz, setQuiz, saveQuiz }:
 
     return (
         <div>
-            
+            {JSON.stringify(quiz)}
             <div className="container mt-5">
 
                 <div id="wd-quiz-details-editor">

@@ -7,12 +7,14 @@ import { IoRocketOutline } from "react-icons/io5";
 import * as coursesClient from "../client";
 import { useSelector, useDispatch } from "react-redux";
 import { setQuizzes, deleteQuiz } from "./reducer";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function Quizzes() {
     const { cid } = useParams();
     const { quizzes } = useSelector((state: any) => state.quizzesReducer);
+    const [searchTerm, setSearchTerm] = useState<string>("");
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
     const fetchQuizzes = async () => {
         const quizzes = await coursesClient.findQuizzesForCourse(cid as string);
@@ -25,9 +27,7 @@ export default function Quizzes() {
     return (
         <div>
 
-            <QuizzesControls /> <br /><br /><br /><br />
-
-
+            <QuizzesControls searchTerm={searchTerm} editSearchTerm={setSearchTerm} /> <br /><br /><br /><br />
             <ul id="wd-quizzes-all" className="list-group rounded-0">
                 <li className="wd-quizzes-all list-group-item p-0 mb-5 fs-5 border-gray">
                     <div className="wd-title p-3 ps-2 bg-secondary">
@@ -38,17 +38,25 @@ export default function Quizzes() {
                     </div>
 
                     <ul className="wd-quizzes list-group rounded-0">
-                        {quizzes.map((quiz: any) => (
-                            <li key={quiz._id} className="wd-quiz list-group-item p03 ps-1">
-                                <div className="d-flex flex-row">
-                                    <div className="p-2">
-                                        <IoRocketOutline color="green" />
-                                    </div>
+                        {quizzes
+                            .filter((quiz: any) => (!searchTerm || searchTerm === "") || quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
+                            .map((quiz: any) => (
+                                <li key={quiz._id} className="wd-quiz list-group-item p03 ps-1">
+                                    <div className="d-flex flex-row">
+                                        <div className="p-2">
+                                            <IoRocketOutline color="green" />
+                                        </div>
 
-                                    <div className="p-2"><div id="wd-quiz-details">
-                                            <h5><strong><Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Details`} className="wd-quiz-link text-decoration-none link-dark">
-
+                                        <div className="p-2"><div id="wd-quiz-details">
+                                            {
+                                                currentUser.role === 'FACULTY' ? 
+                                                <h5><strong><Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Details`} className="wd-quiz-link text-decoration-none link-dark">
                                                 {quiz.title}</Link></strong></h5>
+                                                :
+                                                <h5><strong><Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`} className="wd-quiz-link text-decoration-none link-dark">
+                                                {quiz.title}</Link></strong></h5>
+                                            }
+
                                             <div className="row">
 
                                                 <div className="col-md-auto"><h6><strong>Not available until</strong> {quiz.available_date} |</h6></div>
@@ -56,12 +64,12 @@ export default function Quizzes() {
                                                 <div className="col-md-auto"><h6>{quiz.points}</h6></div>
                                             </div>
                                         </div></div>
-                                    <div className="p-2 ms-auto fixed-with">
-                                        <QuizControlButtons />
+                                        <div className="p-2 ms-auto fixed-with">
+                                            <QuizControlButtons />
+                                        </div>
                                     </div>
-                                </div>
-                            </li>
-                        ))}
+                                </li>
+                            ))}
 
                     </ul>
                 </li>

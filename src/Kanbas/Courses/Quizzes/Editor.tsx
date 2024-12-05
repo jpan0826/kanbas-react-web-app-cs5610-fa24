@@ -42,7 +42,6 @@ export default function Editor() {
     
 
     const fetchQuiz = async () => {
-        
         if (addNewQuiz) {
             setQuiz(defaultQuizDetails);
         }

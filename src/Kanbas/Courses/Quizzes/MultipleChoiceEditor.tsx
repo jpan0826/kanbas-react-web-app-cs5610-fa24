@@ -30,8 +30,7 @@ export default function MultipleChoiceEditor({ question, editQuestion }: { quest
             </div>
             <h4 className="mb-3">Answers</h4>
             {
-                question.choices.map(
-                    (choice: any, index: number) => {
+                question.choices.map((choice: any, index: number) => {
                         return (
                             <div key={index} className="form-check mb-3">
                                 <input
@@ -40,7 +39,7 @@ export default function MultipleChoiceEditor({ question, editQuestion }: { quest
                                     id={`radio-${choice}`}
                                     name="editableRadio"
                                     value={choice}
-                                    checked={question.answers[0] === index}
+                                    checked={question.answers[0] == index}
                                     onChange={(e) => editQuestion(
                                         { ...question, answers: [index]}
                                     )}
