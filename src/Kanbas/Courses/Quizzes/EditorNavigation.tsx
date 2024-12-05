@@ -3,8 +3,8 @@ export default function EditorNavigation() {
     const { pathname } = useLocation();
     const { cid, qid } = useParams();
     const links = [
-        { label: "Details", path: `/Kanbas/Courses/${cid}/Quizzes/${qid}/DetailsEdit` },
-        { label: "Questions", path: `/Kanbas/Courses/${cid}/Quizzes/${qid}/QuestionsEdit` },
+        { label: "Details", path: `/Kanbas/Courses/${cid}/Quizzes/${qid}/Edit/Details` },
+        { label: "Questions", path: `/Kanbas/Courses/${cid}/Quizzes/${qid}/Edit/Questions` },
 
     ]
     return (

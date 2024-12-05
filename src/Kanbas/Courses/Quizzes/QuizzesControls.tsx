@@ -11,7 +11,7 @@ export default function QuizzesControls() {
     const { cid } = useParams();
     const navigate = useNavigate();
     const newQuizRoute = () => {
-        navigate(`/Kanbas/Courses/${cid}/Quizzes/new`);
+        navigate(`/Kanbas/Courses/${cid}/Quizzes/new/Edit/`);
     }
     return (
         <div id="wd-quizzes-controls" className="text-nowrap">

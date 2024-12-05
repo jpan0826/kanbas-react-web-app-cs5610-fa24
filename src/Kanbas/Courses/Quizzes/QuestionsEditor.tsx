@@ -84,7 +84,7 @@ export default function QuestionsEditor({ quiz, setQuiz }:
                         <button id="wd-add-assignment-btn" className="btn btn-lg btn-secondary me-1 float-end" onClick={addNewQuestion}>
                             <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                             Add Question</button>
-                        <Link to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/DetailsEdit`}><button type="submit" className="btn btn-lg btn-danger" onClick={() => saveQuizWithQuestions(questions)}>Save</button></Link>
+                        <Link to={`/Kanbas/Courses/${cid}/Quizzes/${qid}/Edit/Details`}><button type="submit" className="btn btn-lg btn-danger" onClick={() => saveQuizWithQuestions(questions)}>Save</button></Link>
                     </div>
                 </div>
 

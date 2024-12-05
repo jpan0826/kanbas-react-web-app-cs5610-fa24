@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import Quizzes from "./Quizzes";
 import QuizEditor from "./Quizzes/Editor";
 import QuizDetails from "./Quizzes/Details";
+import Quiz from "./Quizzes/Quiz";
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
@@ -48,7 +49,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
             <Route path="/Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="/People" element={<PeopleTable users={users} />} />
             <Route path="/Quizzes" element={<Quizzes />} />
-            <Route path="/Quizzes/:qid/*" element={<QuizEditor />} />
+            <Route path="/Quizzes/:qid" element={<Quiz />} />
+            <Route path="/Quizzes/:qid/Edit/*" element={<QuizEditor />} />
             <Route path="/Quizzes/:qid/Details/*" element={<QuizDetails />} />
           </Routes>
         </div></div>

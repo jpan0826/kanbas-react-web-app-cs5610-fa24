@@ -46,7 +46,7 @@ export default function Quizzes() {
                                     </div>
 
                                     <div className="p-2"><div id="wd-quiz-details">
-                                            <h5><strong><Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`} className="wd-quiz-link text-decoration-none link-dark">
+                                            <h5><strong><Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Details`} className="wd-quiz-link text-decoration-none link-dark">
 
                                                 {quiz.title}</Link></strong></h5>
                                             <div className="row">
@@ -56,9 +56,6 @@ export default function Quizzes() {
                                                 <div className="col-md-auto"><h6>{quiz.points}</h6></div>
                                             </div>
                                         </div></div>
-
-
-
                                     <div className="p-2 ms-auto fixed-with">
                                         <QuizControlButtons />
                                     </div>

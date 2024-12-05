@@ -64,12 +64,11 @@ export default function Editor() {
     return (
         <div>
             <EditorNavigation />
-
             <div className="flex-fill">
                 <Routes>
-                    <Route path="/" element={<Navigate to="DetailsEdit" />} />
-                    <Route path="/DetailsEdit" element={<DetailsEditor quiz={quiz} setQuiz={setQuiz} saveQuiz={saveQuiz} />} />
-                    <Route path="/QuestionsEdit" element={<QuestionsEditor quiz={quiz} setQuiz={setQuiz}/>} />
+                    <Route path="/" element={<Navigate to="details" />} />
+                    <Route path="/details" element={<DetailsEditor quiz={quiz} setQuiz={setQuiz} saveQuiz={saveQuiz} />} />
+                    <Route path="/questions" element={<QuestionsEditor quiz={quiz} setQuiz={setQuiz}/>} />
                 </Routes>
             </div>
         </div>
