@@ -26,7 +26,7 @@ export default function QuestionsEditor({ quiz, setQuiz }:
     const defaultQuestion = {
         "_id": 1,
         "title": "React/Redux Foundamentals ?",
-        "question": "",
+        "question": "my <b>HTML</b>",
         "type": "multipleChoice",
         "assignee": "",
         "points": 10,

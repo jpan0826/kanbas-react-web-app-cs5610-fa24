@@ -6,6 +6,7 @@ import { BsGripVertical } from "react-icons/bs";
 import { FaRegPenToSquare } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
 import { useState } from "react";
+import Editor from 'react-simple-wysiwyg';
 
 export default function TrueFalseEditor({ question, editQuestion }: { question: any, editQuestion: (q: any) => void; }) {
     return (
@@ -13,12 +14,7 @@ export default function TrueFalseEditor({ question, editQuestion }: { question: 
             <p className="mb-3">Enter your question and select True or False for correct answers</p>
             <h4 className="mb-3">Question:</h4>
             <div className="form-group">
-                <textarea
-                    className="form-control"
-                    id="textEditor"
-                    placeholder="Enter question here..."
-                    value={question.question}
-                    onChange={(e) => editQuestion({ ...question, question: e.target.value })}></textarea>
+            <Editor value={question.question} onChange={(e) => editQuestion({ ...question, question: e.target.value })} />
             </div>
             <h4 className="mb-3">Answers</h4>
             <div className="form-check">

@@ -7,6 +7,7 @@ import { FaRegPenToSquare } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa6";
 import { useState } from "react";
 import internal from "stream";
+import Editor from 'react-simple-wysiwyg';
 
 export default function MultipleChoiceEditor({ question, editQuestion }: { question: any, editQuestion: (q: any) => void; }) {
 
@@ -21,12 +22,7 @@ export default function MultipleChoiceEditor({ question, editQuestion }: { quest
             <p className="mb-3">Enter your question and multiple answers, then select one correct answer</p>
             <h4 className="mb-3">Question:</h4>
             <div className="form-group">
-                <textarea
-                    className="form-control"
-                    id="textEditor"
-                    placeholder="Enter question here..."
-                    value={question.question}
-                    onChange={(e) => editQuestion({ ...question, question: e.target.value })}></textarea>
+            <Editor value={question.question} onChange={(e) => editQuestion({ ...question, question: e.target.value })} />
             </div>
             <h4 className="mb-3">Answers</h4>
             {
