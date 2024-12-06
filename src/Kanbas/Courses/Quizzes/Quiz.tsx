@@ -46,6 +46,11 @@ export default function Quiz() {
             if (fetchedScore.status === 'IN_PROGRESS') {
                 setStarted(true)
             }
+        } else {
+            //create new score here
+            // if (fetchedScore.status === 'IN_PROGRESS') {
+            //     setStarted(true)
+            // }
         }
     }
 
