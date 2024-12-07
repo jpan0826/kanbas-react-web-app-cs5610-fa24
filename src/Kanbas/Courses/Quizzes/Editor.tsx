@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 import * as coursesClient from '../client';
 import * as quizzesClient from "./client";
 import { addQuiz, editQuiz } from "./reducer";
+import * as client from "./client";
 
 export default function Editor() {
     const { cid, qid } = useParams();
@@ -21,13 +22,13 @@ export default function Editor() {
         "description": "",
         "assignee": "",
         "type": "Graded Quiz",
-        "points": "",
+        "points": 0,
         "group": "",
         "shuffle": true,
         "time_limit_boolean": false,
-        "time_limit": "20min",
+        "time_limit": 20,
         "multiple_attempts": false,
-        "show_correct_answers": "",
+        "show_correct_answers": false,
         "access_code": "",
         "one_question": "yes",
         "webcam": "no",
@@ -35,6 +36,7 @@ export default function Editor() {
         "due_date": "",
         "available_date": "",
         "until_date": "",
+        "published":false,
         "questions": []
     }
     // local state
@@ -45,8 +47,9 @@ export default function Editor() {
         if (addNewQuiz) {
             setQuiz(defaultQuizDetails);
         }
-        else {
-            setQuiz(quizzes.find((quiz:any) => (quiz._id === qid)));
+        else if (qid) {
+            const fetchedQuiz = await client.findQuiz(qid)
+            setQuiz(fetchedQuiz);
         }
         
     }
@@ -65,7 +68,7 @@ export default function Editor() {
         } else {
             const newQuiz = await quizzesClient.updateQuiz(quiz);
             console.log(newQuiz._id === undefined)
-            dispatch(editQuiz(newQuiz));
+            dispatch(editQuiz(quiz));
             detailsPath = `/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Details`
         }
         navigate(detailsPath);

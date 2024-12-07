@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setQuizzes, deleteQuiz } from "./reducer";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import * as quizzesClient from "./client";
 
 export default function Quizzes() {
     const { cid } = useParams();
@@ -23,6 +24,11 @@ export default function Quizzes() {
     useEffect(() => {
         fetchQuizzes();
     }, [cid]);
+
+    const removeQuiz = async (quizId: string) => {
+        await quizzesClient.deleteQuiz(quizId);
+        dispatch(deleteQuiz(quizId));
+    }
 
     return (
         <div>
@@ -65,7 +71,7 @@ export default function Quizzes() {
                                             </div>
                                         </div></div>
                                         <div className="p-2 ms-auto fixed-with">
-                                            <QuizControlButtons />
+                                            <QuizControlButtons quizId={quiz._id} deleteQuiz={removeQuiz} />
                                         </div>
                                     </div>
                                 </li>
