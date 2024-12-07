@@ -32,7 +32,7 @@ export default function Quiz() {
     const navigate = useNavigate();
 
     //fetch scores from the user
-    const fetchAndSetScore = async (qid: string, quiz : any) => {
+    const fetchAndSetScore = async (qid: string, quiz: any) => {
         if (qid) {
             const res = await client.getScore(qid);
             let fetchedScore = res;
@@ -58,28 +58,28 @@ export default function Quiz() {
         }
         setScore(newScore)
         client.updateScore(newScore)
-        .then(_ => {
-            setStarted(true)
-        })
+            .then(_ => {
+                setStarted(true)
+            })
     }
 
     const submitQuiz = async () => {
         if (viewOnly) return
         const scoreToSubmit = { ...score }
         const userQuizScore = userAnswers
-        .map((answer: any, _i: number) => 
-            quiz.questions[_i].answers.includes(answer) ? quiz.questions[_i].points : 0)
-        .reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
+            .map((answer: any, _i: number) =>
+                quiz.questions[_i].answers.map((_a: string) => _a.toLowerCase()).includes(answer == undefined ? "" : answer.toLowerCase()) ? quiz.questions[_i].points : 0)
+            .reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
         scoreToSubmit.points = userQuizScore
         scoreToSubmit.endDate = (new Date()).toISOString()
         scoreToSubmit.attempts = scoreToSubmit.attempts + 1
         scoreToSubmit.status = "COMPLETED"
         //call client to submit
         client.updateScore(scoreToSubmit)
-        .then(_ => {
-            //refresh page
-            navigate(0);
-                })
+            .then(_ => {
+                //refresh page
+                navigate(0);
+            })
     }
 
     const calculateQuizScore = (quiz: any) => {
@@ -92,7 +92,7 @@ export default function Quiz() {
             const fetchedQuiz = await client.findQuiz(qid)
             setQuiz(fetchedQuiz);
             //create a user answer array of the size of the questions
-            const fetchedScore  = await fetchAndSetScore(qid, fetchedQuiz)
+            const fetchedScore = await fetchAndSetScore(qid, fetchedQuiz)
             if (fetchedScore && fetchedScore.attempts >= fetchedQuiz['multiple_attempts']) {
                 if (currentUser.role !== "FACULTY") {
                     //student cannot take more
@@ -102,7 +102,7 @@ export default function Quiz() {
             if (fetchedScore) {
                 if (fetchedScore['status'] === "IN_PROGRESS") {
                     setStarted(true)
-                    setUserAnswers(fetchedScore.answers.map((a : string) => a == undefined? "" : a))
+                    setUserAnswers(fetchedScore.answers.map((a: string) => a == undefined ? "" : a))
                 }
             }
         }
@@ -116,7 +116,7 @@ export default function Quiz() {
     const setAnswer = (questionNumber: number, userAnswer: string) => {
         if (viewOnly) return
         const clone = [...userAnswers]
-        const answers = clone.map((a: string, i: number) => i == questionNumber? userAnswer : a)
+        const answers = clone.map((a: string, i: number) => i == questionNumber ? userAnswer : a)
         setUserAnswers(answers)
         const newScore = {
             ...score,
@@ -258,7 +258,7 @@ export default function Quiz() {
                                 <strong>Time Limit:</strong> {quiz.time_limit} minutes
                             </p>
                             <p>
-                                <strong>Remaining Attempts:</strong> {score && score.attempts ? quiz['multiple_attempts'] - score.attempts :  quiz['multiple_attempts']}
+                                <strong>Remaining Attempts:</strong> {score && score.attempts ? quiz['multiple_attempts'] - score.attempts : quiz['multiple_attempts']}
                             </p>
                         </div>
                         {
@@ -297,13 +297,12 @@ export default function Quiz() {
                                             <div className="card-header">
                                                 <strong>Questions</strong>
                                             </div>
-                                            {JSON.stringify(userAnswers)}
                                             <ul className="list-group list-group-flush">
                                                 {
                                                     quiz.questions && quiz.questions.map((question: any, index: number) => {
                                                         return (
                                                             <div key={question._id}>
-                                                                <button className={(userAnswers[index] !== undefined  && userAnswers[index] !== "") ? "list-group-item border-0 text-primary text-success" : "list-group-item border-0 text-primary text-danger"} onClick={() => setIndex(index)}>
+                                                                <button className={(userAnswers[index] !== undefined && userAnswers[index] !== "") ? "list-group-item border-0 text-primary text-success" : "list-group-item border-0 text-primary text-danger"} onClick={() => setIndex(index)}>
                                                                     <li >Question {index + 1}</li>
                                                                 </button>
                                                             </div>
@@ -319,13 +318,13 @@ export default function Quiz() {
                                 </div>
 
                                 {/* Submit Button */}
-                                {!viewOnly && 
+                                {!viewOnly &&
                                     <div className="row mt-4">
                                         {
                                             time && <div className="col-md-8"><p>Quiz saved at {`${time.getHours()}:${time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()}:${time.getSeconds()}`}</p></div>
                                         }
                                         <div className="col-md-8">
-                                          <Link to={`/Kanbas/Courses/${cid}/Quizzes`}><button className="btn btn-success w-100" onClick={submitQuiz}>Submit Quiz</button></Link>
+                                            <Link to={`/Kanbas/Courses/${cid}/Quizzes`}><button className="btn btn-success w-100" onClick={submitQuiz}>Submit Quiz</button></Link>
                                         </div>
                                     </div>
                                 }
