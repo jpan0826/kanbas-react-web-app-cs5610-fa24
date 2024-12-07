@@ -49,8 +49,8 @@ export default function QuizDetails() {
                 <dt className="col-sm-3">Time Limit</dt>
                 <dd className="col-sm-9">{quiz.time_limit ? "Yes" : "No"}</dd>
 
-                <dt className="col-sm-3">Multiple Attempts</dt>
-                <dd className="col-sm-9">{quiz.multiple_attempts ? "Yes" : "No"}</dd>
+                <dt className="col-sm-3">Number of Attempts Allowed</dt>
+                <dd className="col-sm-9">{quiz.multiple_attempts}</dd>
 
                 <dt className="col-sm-3">View Responses</dt>
                 <dd className="col-sm-9">{}</dd>

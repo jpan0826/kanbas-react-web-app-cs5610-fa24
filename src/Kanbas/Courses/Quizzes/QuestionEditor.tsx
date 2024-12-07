@@ -111,8 +111,6 @@ export default function QuestionEditor({ question, editQuestion }: { question: a
                                     <div className="row">
                                         <div className="col-md-auto"><h6><span className="text-danger"></span>Question Type: {question.type} </h6></div>
                                         <div className="col-md-auto"><h6> Points: {question.points}</h6></div>
-                                        <div className="col-md-auto"><h6>Allow Multiple Attemps:
-                                            {question.multiple_attempts ? (<ImCheckboxChecked className="text-success me-1 position-absolute fs-5" />) : (<ImCheckboxUnchecked />)}</h6></div>
                                     </div>
                                 </div>
                                 </div>

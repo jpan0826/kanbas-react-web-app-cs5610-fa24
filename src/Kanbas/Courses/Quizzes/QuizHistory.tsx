@@ -14,14 +14,23 @@ import MultipleChoiceEditor from "./MultipleChoiceEditor";
 import QuestionEditor from "./QuestionEditor";
 import * as client from "./client"
 import { FaArrowAltCircleRight } from "react-icons/fa";
+import { divide } from "../../../Labs/Lab3/Math";
 
 export default function QuizHistory({ quiz, score }: { quiz: any, score: any }) {
     const userAnswers = score.answers
 
     const calculateQuizScore = (quiz: any) => {
-        console.log(quiz)
         const sum = quiz.questions.map((question: any) => question.points).reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
         return sum
+    }
+
+    const calculateTimeTaken = () => {
+        if (!score.endDate) return quiz["time_limit"]
+        const end = new Date(score.endDate)
+        const start = new Date(score.startDate)
+        // Calculate the difference in milliseconds
+        const diffInMilliseconds: number = end.getTime() - start.getTime();
+        return Math.ceil(diffInMilliseconds / 1000 / 60);
     }
 
     const renderMultipleChoice = (question: any, questionIndex: number) => {
@@ -61,11 +70,15 @@ export default function QuizHistory({ quiz, score }: { quiz: any, score: any }) 
             <div>
                 <div dangerouslySetInnerHTML={{ __html: question.question }} />
                 <div className="d-inline-flex align-items-center bg-light text-dark p-2 rounded">
-                    {/* React icon */}
-                    <FaArrowAltCircleRight></FaArrowAltCircleRight>
-                    {/* Text */}
-                    <span>Your Answer</span>
-                    <strong className="text-secondary border border-light p-2">{userAnswers[questionIndex]}</strong>
+                    {userAnswers[questionIndex] && userAnswers[questionIndex] !== "" ?
+                        <div>
+                            <FaArrowAltCircleRight></FaArrowAltCircleRight>
+                            {/* Text */}
+                            <span>Your Answer</span>
+                            <strong className="text-secondary border border-light p-2">{userAnswers[questionIndex]}</strong>
+                        </div>
+                        : <></>
+                    }
                 </div>
             </div>
         )
@@ -112,7 +125,7 @@ export default function QuizHistory({ quiz, score }: { quiz: any, score: any }) 
     const renderQuestion = () => {
         return quiz.questions && quiz.questions.map((question: any, index: number) => {
             return (
-                <div>
+                <div key={`${question.title}-${index}`}>
                     <div className="card mb-4" style={{ minHeight: '300px' }}>
                         <div className="card-header">
                             <strong>{question.title}</strong>
@@ -152,7 +165,7 @@ export default function QuizHistory({ quiz, score }: { quiz: any, score: any }) 
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>18 minutes</td>
+                                            <td>{calculateTimeTaken()} minutes</td>
                                             <td>{score.points} out of {calculateQuizScore(quiz)}</td>
                                         </tr>
                                     </tbody>

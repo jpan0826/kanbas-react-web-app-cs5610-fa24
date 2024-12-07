@@ -14,6 +14,8 @@ import MultipleChoiceEditor from "./MultipleChoiceEditor";
 import QuestionEditor from "./QuestionEditor";
 import * as client from "./client"
 import QuizHistory from "./QuizHistory";
+import JsonStringify from "../../../Labs/Lab3/JsonStringfy";
+
 
 export default function Quiz() {
     const { cid, qid } = useParams();
@@ -23,79 +25,107 @@ export default function Quiz() {
     const [quiz, setQuiz] = useState<any>();
     const [time, setTime] = useState<Date>();
     const [index, setIndex] = useState<number>(0)
-    const [userAnswers, setUserAnswers] = useState<string[]>([]);
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const [viewOnly, setViewOnly] = useState<boolean>(false);
-    const attemptsAllowed = 2
     const [started, setStarted] = useState<boolean>(false);
-
-    const defaultScore = {
-        "points": 10,
-        "startDate": "12/05/2024 9:50",
-        "endDate": "12/05/2024 10:00",
-        "attempts": 1,
-        "answers": ["yes", "True", "c", "200"],
-        "status": "COMPLETED"
-    }
+    const [userAnswers, setUserAnswers] = useState<string[]>([]);
+    const navigate = useNavigate();
 
     //fetch scores from the user
-    const fetchScore = async () => {
-        const fetchedScore = defaultScore;
-        if (fetchedScore) {
+    const fetchAndSetScore = async (qid: string, quiz : any) => {
+        if (qid) {
+            const res = await client.getScore(qid);
+            let fetchedScore = res;
             setScore(fetchedScore)
-            if (fetchedScore.status === 'IN_PROGRESS') {
-                setStarted(true)
-            }
-        } else {
-            //create new score here
-            // if (fetchedScore.status === 'IN_PROGRESS') {
-            //     setStarted(true)
-            // }
+            return fetchedScore
         }
     }
 
+    const startQuiz = async () => {
+        let fectedScore = score
+        if (!score && qid) {
+            fectedScore = await client.createScore(qid)
+        }
+        const array: string[] = new Array(quiz.questions.length)
+        setUserAnswers(array)
+        const newScore = {
+            ...fectedScore,
+            startDate: new Date().toISOString(),
+            status: "IN_PROGRESS",
+            answers: array,
+            points: 0,
+            attempts: 0,
+        }
+        setScore(newScore)
+        client.updateScore(newScore)
+        .then(_ => {
+            setStarted(true)
+        })
+    }
+
     const submitQuiz = async () => {
-        const userScore = userAnswers
+        if (viewOnly) return
         const scoreToSubmit = { ...score }
         const userQuizScore = userAnswers
         .map((answer: any, _i: number) => 
-            quiz.questions[_i].answeer.includes(answer) ? quiz.questions[_i] : 0)
+            quiz.questions[_i].answers.includes(answer) ? quiz.questions[_i].points : 0)
         .reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
         scoreToSubmit.points = userQuizScore
-        scoreToSubmit.endDate = Date.now()
+        scoreToSubmit.endDate = (new Date()).toISOString()
         scoreToSubmit.attempts = scoreToSubmit.attempts + 1
         scoreToSubmit.status = "COMPLETED"
         //call client to submit
+        client.updateScore(scoreToSubmit)
+        .then(_ => {
+            //refresh page
+            navigate(0);
+                })
     }
 
     const calculateQuizScore = (quiz: any) => {
-        console.log(quiz)
         const sum = quiz.questions.map((question: any) => question.points).reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
         return sum
     }
 
-    const fetchQuiz = async () => {
+    const fetchAndSetQuiz = async () => {
         if (qid) {
             const fetchedQuiz = await client.findQuiz(qid)
             setQuiz(fetchedQuiz);
             //create a user answer array of the size of the questions
-            const array: string[] = new Array(fetchedQuiz.questions.length)
-            setUserAnswers(array)
+            const fetchedScore  = await fetchAndSetScore(qid, fetchedQuiz)
+            if (fetchedScore && fetchedScore.attempts >= fetchedQuiz['multiple_attempts']) {
+                if (currentUser.role !== "FACULTY") {
+                    //student cannot take more
+                    setViewOnly(true)
+                }
+            }
+            if (fetchedScore) {
+                if (fetchedScore['status'] === "IN_PROGRESS") {
+                    setStarted(true)
+                    setUserAnswers(fetchedScore.answers.map((a : string) => a == undefined? "" : a))
+                }
+            }
         }
     }
 
     useEffect(() => {
         // const fetchedQuiz = quizzes.find((quiz: any) => (quiz._id === qid));
-        fetchQuiz()
-        fetchScore()
-    }, [qid, cid]);
+        fetchAndSetQuiz()
+    }, [qid]);
 
-    const setUserAnswer = (questionNumber: number, userAnswer: string) => {
+    const setAnswer = (questionNumber: number, userAnswer: string) => {
         if (viewOnly) return
-        const answers = [...userAnswers]
-        answers[questionNumber] = userAnswer
+        const clone = [...userAnswers]
+        const answers = clone.map((a: string, i: number) => i == questionNumber? userAnswer : a)
         setUserAnswers(answers)
-        setTime(new Date())
+        const newScore = {
+            ...score,
+            answers
+        }
+        client.updateScore(newScore).then(_ => {
+            setTime(new Date())
+        })
+        setScore(newScore)
     }
 
     const renderMultipleChoice = (question: any) => {
@@ -112,7 +142,7 @@ export default function Quiz() {
                                 name="editableRadio"
                                 value={choice}
                                 checked={userAnswers[index] == choice}
-                                onChange={(e) => setUserAnswer(index, e.target.value)}
+                                onChange={(e) => setAnswer(index, e.target.value)}
                             />
                             {choice}
                         </div>
@@ -128,7 +158,7 @@ export default function Quiz() {
                 <div dangerouslySetInnerHTML={{ __html: question.question }} />
                 <input placeholder="Fill in the blank" type="text" id="wd-quizzes-search-btn"
                     value={userAnswers[index]}
-                    onChange={(e) => setUserAnswer(index, e.target.value)}
+                    onChange={(e) => setAnswer(index, e.target.value)}
                 />
             </div>
         )
@@ -146,7 +176,7 @@ export default function Quiz() {
                         name="trueFalse"
                         value="True"
                         checked={userAnswers[index] === "True"}
-                        onChange={(e) => setUserAnswer(index, "True")}
+                        onChange={(e) => setAnswer(index, "True")}
                     />
                     <label className="form-check-label" htmlFor="trueOption">
                         True
@@ -160,7 +190,7 @@ export default function Quiz() {
                         name="trueFalse"
                         value="False"
                         checked={userAnswers[index] === "False"}
-                        onChange={(e) => setUserAnswer(index, "False")}
+                        onChange={(e) => setAnswer(index, "False")}
                     />
                     <label className="form-check-label" htmlFor="falseOption">
                         False
@@ -227,33 +257,19 @@ export default function Quiz() {
                             <p>
                                 <strong>Time Limit:</strong> {quiz.time_limit} minutes
                             </p>
+                            <p>
+                                <strong>Remaining Attempts:</strong> {score && score.attempts ? quiz['multiple_attempts'] - score.attempts :  quiz['multiple_attempts']}
+                            </p>
                         </div>
                         {
-                            score && !started && <QuizHistory quiz={quiz} score={score} />
-                            // <div>
-                            //     <h2 className="mt-4">Attempt History</h2>
-                            //     <table className="table table-bordered mt-3">
-                            //         <thead className="thead-light">
-                            //             <tr>
-                            //                 <th>Time</th>
-                            //                 <th>Score</th>
-                            //             </tr>
-                            //         </thead>
-                            //         <tbody>
-                            //             <tr>
-                            //                 <td>18 minutes</td>
-                            //                 <td>{score.points} out of {calculateQuizScore(quiz)}</td>
-                            //             </tr>
-                            //         </tbody>
-                            //     </table>
-                            // </div>
+                            score && score.attempts !== 0 && !started && <QuizHistory quiz={quiz} score={score} />
                         }
                     </div>
                     <div className="container mt-4">
 
                         {/* Main Content */}
-                        {!started &&
-                            <button id="wd-add-assignment-btn" className="btn btn-lg btn-danger me-1 float-start" onClick={() => setStarted(true)}>
+                        {!viewOnly && !started &&
+                            <button id="wd-add-assignment-btn" className="btn btn-lg btn-danger me-1 float-start" onClick={() => startQuiz()}>
                                 <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                                 Start Quiz</button>
                         }
@@ -281,12 +297,13 @@ export default function Quiz() {
                                             <div className="card-header">
                                                 <strong>Questions</strong>
                                             </div>
+                                            {JSON.stringify(userAnswers)}
                                             <ul className="list-group list-group-flush">
                                                 {
                                                     quiz.questions && quiz.questions.map((question: any, index: number) => {
                                                         return (
                                                             <div key={question._id}>
-                                                                <button className={userAnswers[index] !== undefined ? "list-group-item border-0 text-primary text-success" : "list-group-item border-0 text-primary text-danger"} onClick={() => setIndex(index)}>
+                                                                <button className={(userAnswers[index] !== undefined  && userAnswers[index] !== "") ? "list-group-item border-0 text-primary text-success" : "list-group-item border-0 text-primary text-danger"} onClick={() => setIndex(index)}>
                                                                     <li >Question {index + 1}</li>
                                                                 </button>
                                                             </div>
@@ -302,7 +319,7 @@ export default function Quiz() {
                                 </div>
 
                                 {/* Submit Button */}
-                                {!viewOnly &&
+                                {!viewOnly && 
                                     <div className="row mt-4">
                                         {
                                             time && <div className="col-md-8"><p>Quiz saved at {`${time.getHours()}:${time.getMinutes() < 10 ? '0' + time.getMinutes() : time.getMinutes()}:${time.getSeconds()}`}</p></div>

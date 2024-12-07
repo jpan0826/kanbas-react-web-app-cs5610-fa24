@@ -27,7 +27,7 @@ export default function Editor() {
         "shuffle": true,
         "time_limit_boolean": false,
         "time_limit": 20,
-        "multiple_attempts": false,
+        "multiple_attempts": 1,
         "show_correct_answers": false,
         "access_code": "",
         "one_question": "yes",

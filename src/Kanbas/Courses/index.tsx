@@ -14,6 +14,7 @@ import QuizEditor from "./Quizzes/Editor";
 import QuizDetails from "./Quizzes/Details";
 import Quiz from "./Quizzes/Quiz";
 import ProtectedRouteForRole from "../Account/ProtectedRouteForRole";
+import ProtectedRoute from "../Account/ProtectedRoute";
 export default function Courses({ courses }: { courses: any[]; }) {
   const { cid } = useParams();
   const course = courses.find((course) => course._id === cid);
@@ -49,8 +50,8 @@ export default function Courses({ courses }: { courses: any[]; }) {
             <Route path="/Assignments/new" element={<AssignmentEditor />} />
             <Route path="/Assignments/:aid" element={<AssignmentEditor />} />
             <Route path="/People" element={<PeopleTable users={users} />} />
-            <Route path="/Quizzes" element={<Quizzes />} />
-            <Route path="/Quizzes/:qid" element={<Quiz />} />
+            <Route path="/Quizzes" element={<ProtectedRoute><Quizzes /></ProtectedRoute>} />
+            <Route path="/Quizzes/:qid" element={<ProtectedRoute><Quiz /></ProtectedRoute>} />
             <Route path="/Quizzes/:qid/Edit/*" element={<ProtectedRouteForRole allowedRole={"FACULTY"} redirectLink={`/Kanbas/Courses/${cid}/Quizzes/`}><QuizEditor /></ProtectedRouteForRole>} />
             <Route path="/Quizzes/:qid/Details/*" element={<ProtectedRouteForRole allowedRole={"FACULTY"} redirectLink={`/Kanbas/Courses/${cid}/Quizzes/`}><QuizDetails /></ProtectedRouteForRole>} />
           </Routes>

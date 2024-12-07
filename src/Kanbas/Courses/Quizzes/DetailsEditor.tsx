@@ -76,7 +76,7 @@ export default function DetailsEditor({ quiz, setQuiz, saveQuiz }:
                         <label htmlFor="wd-quiz-shuffle">Shuffle Answers</label><br />
 
                         {/* allow multiple attempts */}
-                        <input type="checkbox" name="check-option" id="wd-quiz-multiple-attempts" checked={quiz.multiple_attempts} onChange={() => setQuiz({ ...quiz, multiple_attempts: !quiz.multiple_attempts })} />
+                        <input type="number" name="check-option" id="wd-quiz-multiple-attempts" value={quiz.multiple_attempts} onChange={(e) => setQuiz({ ...quiz, multiple_attempts: e.target.value })} />
                         <label htmlFor="wd-quiz-multiple-attempts">Allow Multiple Attempts</label><br />
 
                         {/* TODO: time limit  */}

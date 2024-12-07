@@ -33,7 +33,6 @@ export default function QuestionsEditor({ quiz, setQuiz }:
         "group": "",
         "shuffle": true,
         "time": 20,
-        "multiple_attempts": false,
         "show_correct_answers": "",
         "access_code": "",
         "lock": "no",
