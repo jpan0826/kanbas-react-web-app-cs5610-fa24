@@ -1,15 +1,16 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import QuizzesControls from "./QuizzesControls";
-import QuizControlButtons from "./QuizControlButtons";
 import { BsGripVertical } from "react-icons/bs";
 import { IoRocketOutline } from "react-icons/io5";
-
 import * as coursesClient from "../client";
 import { useSelector, useDispatch } from "react-redux";
-import { setQuizzes, deleteQuiz } from "./reducer";
+import { setQuizzes, deleteQuiz , editQuiz } from "./reducer";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import * as quizzesClient from "./client";
+import { IoEllipsisVertical } from "react-icons/io5";
+import { RiForbidLine } from "react-icons/ri";
+import GreenCheckmark from "../Assignments/GreenCheckmark";
 
 export default function Quizzes() {
     const { cid } = useParams();
@@ -17,6 +18,7 @@ export default function Quizzes() {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const fetchQuizzes = async () => {
         const quizzes = await coursesClient.findQuizzesForCourse(cid as string);
         dispatch(setQuizzes(quizzes));
@@ -28,6 +30,12 @@ export default function Quizzes() {
     const removeQuiz = async (quizId: string) => {
         await quizzesClient.deleteQuiz(quizId);
         dispatch(deleteQuiz(quizId));
+    }
+
+    const publishQuiz = async (quiz: any) => {
+        quiz = {...quiz, published: !quiz.published};
+        await quizzesClient.updateQuiz(quiz);
+        dispatch(editQuiz(quiz));
     }
 
     return (
@@ -46,6 +54,7 @@ export default function Quizzes() {
                     <ul className="wd-quizzes list-group rounded-0">
                         {quizzes
                             .filter((quiz: any) => (!searchTerm || searchTerm === "") || quiz.title.toLowerCase().includes(searchTerm.toLowerCase()))
+                            .filter((quiz: any) => quiz.published || currentUser.role === "FACULTY")
                             .map((quiz: any) => (
                                 <li key={quiz._id} className="wd-quiz list-group-item p03 ps-1">
                                     <div className="d-flex flex-row">
@@ -55,12 +64,12 @@ export default function Quizzes() {
 
                                         <div className="p-2"><div id="wd-quiz-details">
                                             {
-                                                currentUser.role === 'FACULTY' ? 
-                                                <h5><strong><Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Details`} className="wd-quiz-link text-decoration-none link-dark">
-                                                {quiz.title}</Link></strong></h5>
-                                                :
-                                                <h5><strong><Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`} className="wd-quiz-link text-decoration-none link-dark">
-                                                {quiz.title}</Link></strong></h5>
+                                                currentUser.role === 'FACULTY' ?
+                                                    <h5><strong><Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Details`} className="wd-quiz-link text-decoration-none link-dark">
+                                                        {quiz.title}</Link></strong></h5>
+                                                    :
+                                                    <h5><strong><Link to={`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}`} className="wd-quiz-link text-decoration-none link-dark">
+                                                        {quiz.title}</Link></strong></h5>
                                             }
 
                                             <div className="row">
@@ -70,9 +79,41 @@ export default function Quizzes() {
                                                 <div className="col-md-auto"><h6>{quiz.points}</h6></div>
                                             </div>
                                         </div></div>
+
+                                        {currentUser.role === "FACULTY" && 
                                         <div className="p-2 ms-auto fixed-with">
-                                            <QuizControlButtons quizId={quiz._id} deleteQuiz={removeQuiz} />
-                                        </div>
+                                            
+            
+                                            <div className="float-end">
+
+                                            <button className="border border-0 btn btn-outline-secondary bg-white " onClick={() => publishQuiz(quiz)} >
+                                                {quiz.published ? <GreenCheckmark /> : <RiForbidLine color="red" />}
+                                                </button>
+
+
+                                                <div className="dropdown d-inline me-1 float-end">
+                                                    <button id="wd-quiz-context-menu-btn" className="btn btn-lg dropdown" type="button" data-bs-toggle="dropdown">
+                                                        <IoEllipsisVertical className="fs-4" />
+                                                    </button>
+                                                    <ul className="dropdown-menu">
+                                                        <li>
+                                                            <a id="wd-quiz-publish-button" className="dropdown-item" onClick = {() => publishQuiz(quiz)}  >
+                                                                {quiz.published ? <p>Unpublish</p> : <p>Publish</p> }</a>
+                                                        </li>
+                                                        <li>
+                                                            <a id="wd-quiz-edit-button" className="dropdown-item" onClick={()=>navigate(`/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Edit`)}>
+                                                                Edit</a>
+                                                        </li>
+                                                        <li>
+                                                            <a id="wd-quiz-delete-button" className="dropdown-item" onClick={() => removeQuiz(quiz._id)}  >
+                                                                Delete</a>
+                                                        </li>
+
+                                                    </ul>
+                                                </div>
+
+                                            </div>
+                                        </div>}
                                     </div>
                                 </li>
                             ))}
