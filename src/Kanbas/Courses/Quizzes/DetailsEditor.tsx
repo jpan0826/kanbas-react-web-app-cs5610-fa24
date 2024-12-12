@@ -5,20 +5,21 @@ import { useEffect, useState } from 'react';
 import * as coursesClient from '../client';
 import * as quizzesClient from "./client";
 import { addQuiz, editQuiz } from "./reducer";
+import Editor from 'react-simple-wysiwyg';
 
 
 export default function DetailsEditor({ quiz, setQuiz, saveQuiz }:
     {
         quiz: any,
         setQuiz: (quiz: any) => void,
-        saveQuiz: (quiz: any) => void
+        saveQuiz: (quiz: any, publish:boolean) => void
     }) {
     const { cid, qid } = useParams();
 
 
     return (
         <div>
-            {JSON.stringify(quiz)}
+
             <div className="container mt-5">
 
                 <div id="wd-quiz-details-editor">
@@ -36,10 +37,10 @@ export default function DetailsEditor({ quiz, setQuiz, saveQuiz }:
                     {/* desciption */}
                     <div id="wd-quiz-description" className="mb-3">
                         <label htmlFor="quiz-description" className="form-label">Description</label>
-                        <div className="col-md-3">
-                            <input type="text" className="form-control" id="quiz-description"
-                                defaultValue={quiz.description} onChange={(e) => setQuiz({ ...quiz, description: e.target.value })} />
+                        <div className="form-group">
+                            <Editor value={quiz.description} onChange={(e) => setQuiz({ ...quiz, description: e.target.value })} />
                         </div>
+
                     </div>
 
                     {/* quiz type */}
@@ -142,7 +143,10 @@ export default function DetailsEditor({ quiz, setQuiz, saveQuiz }:
             <div className="container float-start">
                 <div className="d-flex justify-content-center">
                     {/* save to Quiz Detail screen  */}
-<button type="submit" className="btn btn-primary" onClick={() => saveQuiz(quiz)}>Save</button>
+                    <button type="submit" className="btn btn-primary" onClick={() => saveQuiz(quiz, false)}>Save</button>
+                    {/* save and publish  */}
+                    <button type="submit" className="btn btn-danger" onClick={() => saveQuiz(quiz, true) }>Save and Publish</button>
+
                     {/* cancel to Quiz list */}
                     <Link to={`/Kanbas/Courses/${cid}/Quizzes`}><button type="button" className="btn btn-secondary" >Cancel</button></Link>
 

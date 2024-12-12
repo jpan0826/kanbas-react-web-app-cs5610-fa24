@@ -15,6 +15,8 @@ import QuestionEditor from "./QuestionEditor";
 import * as client from "./client"
 import { FaArrowAltCircleRight } from "react-icons/fa";
 import { divide } from "../../../Labs/Lab3/Math";
+import { RxCross1 } from "react-icons/rx";
+import { IoIosCheckmarkCircle } from "react-icons/io";
 
 export default function QuizHistory({ quiz, score }: { quiz: any, score: any }) {
     const userAnswers = score.answers
@@ -54,7 +56,16 @@ export default function QuizHistory({ quiz, score }: { quiz: any, score: any }) 
                                             </div>
                                             : <div />
                                     }
-                                    <strong>{choice}</strong>
+                                    {
+                                        userAnswers[questionIndex] === choice ?
+                                            choice === quiz.questions[questionIndex].answers[0] ?
+                                                <strong className="text-success">{choice} <IoIosCheckmarkCircle color="green"/></strong> :
+                                                <strong className="text-danger"> {choice}
+                                                    <RxCross1 color="red" />
+                                                </strong>
+                                            :
+                                            <strong>{choice}</strong>
+                                    }
                                 </li>
 
                             )
@@ -75,7 +86,14 @@ export default function QuizHistory({ quiz, score }: { quiz: any, score: any }) 
                             <FaArrowAltCircleRight></FaArrowAltCircleRight>
                             {/* Text */}
                             <span>Your Answer</span>
-                            <strong className="text-secondary border border-light p-2">{userAnswers[questionIndex]}</strong>
+                            {userAnswers[questionIndex] === quiz.questions[questionIndex].answers[0] ?
+                                <strong className="text-success border border-light p-2">{userAnswers[questionIndex]} <IoIosCheckmarkCircle color="green"/></strong>
+                                :
+                                <strong className="text-danger border border-light p-2">{userAnswers[questionIndex]}
+                                    <RxCross1 color="red" />
+                                </strong>
+
+                            }
                         </div>
                         : <></>
                     }
@@ -101,7 +119,16 @@ export default function QuizHistory({ quiz, score }: { quiz: any, score: any }) 
                                         <span>Your Answer</span>
                                     </div> : <></>
                             }
-                            <strong>True</strong>
+                            {
+                                userAnswers[questionIndex] === 'True' ?
+                                    'True' === quiz.questions[questionIndex].answers[0] ?
+                                        <strong className="text-success">True <IoIosCheckmarkCircle color="green"/></strong> :
+                                        <strong className="text-danger"> True
+                                            <RxCross1 color="red" />
+                                        </strong>
+                                    :
+                                    <strong>True</strong>
+                            }
                         </li>
                         <li className="list-group-item text-center d-flex justify-content-start" >
                             {
@@ -114,8 +141,16 @@ export default function QuizHistory({ quiz, score }: { quiz: any, score: any }) 
                                     </div>
                                     : <div />
                             }
-                            <strong>False</strong>
-                        </li>
+                            {
+                                userAnswers[questionIndex] === 'False' ?
+                                    'False' === quiz.questions[questionIndex].answers[0] ?
+                                        <strong className="text-success">False <IoIosCheckmarkCircle color="green"/></strong> :
+                                        <strong className="text-danger"> False
+                                            <RxCross1 color="red" />
+                                        </strong>
+                                    :
+                                    <strong>False</strong>
+                            }                        </li>
                     </ul>
                 </div>
             </div>

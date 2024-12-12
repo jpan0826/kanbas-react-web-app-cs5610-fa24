@@ -35,7 +35,7 @@ export default function MultipleChoiceEditor({ question, editQuestion }: { quest
                                 id={`radio-${choice}`}
                                 name="editableRadio"
                                 value={choice}
-                                checked={question.answers[0] == index}
+                                checked={question.answers[0] === choice}
                                 onChange={(e) => editQuestion(
                                     { ...question, answers: choice }
                                 )}

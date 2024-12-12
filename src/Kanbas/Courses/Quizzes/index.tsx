@@ -37,7 +37,10 @@ export default function Quizzes() {
         await quizzesClient.updateQuiz(quiz);
         dispatch(editQuiz(quiz));
     }
-
+    const calculateQuizScore = (quiz: any) => {
+        const sum = quiz.questions.map((question: any) => question.points).reduce((accumulator: number, currentValue: number) => accumulator + currentValue, 0);
+        return sum
+    }
     return (
         <div>
 
@@ -76,7 +79,9 @@ export default function Quizzes() {
 
                                                 <div className="col-md-auto"><h6><strong>Not available until</strong> {quiz.available_date} |</h6></div>
                                                 <div className="col-md-auto"><h6><strong>Due</strong> {quiz.due_date} |</h6></div>
-                                                <div className="col-md-auto"><h6>{quiz.points}</h6></div>
+                                                <div className="col-md-auto"><h6>{calculateQuizScore(quiz)} <strong>pts</strong> |</h6></div>
+                                                <div className="col-md-auto"><h6>{quiz.questions.length} Questions </h6></div>
+
                                             </div>
                                         </div></div>
 

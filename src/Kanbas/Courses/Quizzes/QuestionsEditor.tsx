@@ -25,8 +25,8 @@ export default function QuestionsEditor({ quiz, setQuiz }:
     const [questions, setQuestions] = useState<any[]>((quiz && quiz.questions) || []);
     const defaultQuestion = {
         "_id": 1,
-        "title": "React/Redux Foundamentals ?",
-        "question": "my <b>HTML</b>",
+        "title": "",
+        "question": "",
         "type": "multipleChoice",
         "assignee": "",
         "points": 10,

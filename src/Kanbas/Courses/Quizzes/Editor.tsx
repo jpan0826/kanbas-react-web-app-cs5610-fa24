@@ -57,9 +57,13 @@ export default function Editor() {
         fetchQuiz();
     }, [cid, qid]);
 
-    const saveQuiz = async (quiz: any) => {
+    const saveQuiz = async (quiz: any, publish: boolean) => {
         let detailsPath = '';
         if (!cid) return;
+
+        if (publish) {
+            quiz.published = publish;
+        }
 
         if (addNewQuiz) {
             const newQuiz = await coursesClient.createQuizForCourse(cid, quiz)
@@ -71,8 +75,15 @@ export default function Editor() {
             dispatch(editQuiz(quiz));
             detailsPath = `/Kanbas/Courses/${cid}/Quizzes/${quiz._id}/Details`
         }
-        navigate(detailsPath);
+        if (publish) {
+            navigate(`/Kanbas/Courses/${cid}/Quizzes`);
+        }
+        else {
+            navigate(detailsPath);
+        }
+        
     };
+
 
     return (
         <div>
